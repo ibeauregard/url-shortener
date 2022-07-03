@@ -55,7 +55,7 @@ func getNormalizedUrl(c *gin.Context) (*url.URL, error) {
 		c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Expected JSON with non-empty 'longUrl' attribute"})
 		return nil, err
 	}
-	normalizedUrl, err := Normalize(payload.LongUrl)
+	normalizedUrl, err := normalize(payload.LongUrl)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errorMessage": "Not a valid URL"})
 		return nil, err

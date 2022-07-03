@@ -20,7 +20,7 @@ var (
 	}
 )
 
-func Normalize(s string) (*url.URL, error) {
+func normalize(s string) (*url.URL, error) {
 	s, err := performBasicNormalization(s)
 	if err != nil {
 		return nil, err
