@@ -5,7 +5,7 @@ build:
 run:
 	docker run --interactive --tty --name=url_shortener_container \
     		--volume=url_shortener_db:/home/urlshortener/db/data --publish=8080:8080 --rm \
-    		--env APP_HOST=localhost url_shortener:latest
+    		--env APP_HOST=localhost:8080 url_shortener:latest
 
 restart: stop run
 

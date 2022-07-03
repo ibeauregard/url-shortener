@@ -1,12 +1,13 @@
 package main
 
-func getKeyFromDb(longUrl string) (shortUrl string, found bool) {
-	row := keyFromLongUrlStmt.QueryRow(longUrl)
-	var key string
-	if err := row.Scan(&key); err != nil {
-		return "", false
-	}
-	return key, true
+import "database/sql"
+
+func getKeyFromDb(longUrl string) (key string, found bool) {
+	return getFromDb(keyFromLongUrlStmt, longUrl)
+}
+
+func getLongUrlFromDb(key string) (longUrl string, found bool) {
+	return getFromDb(longUrlFromKeyStmt, key)
 }
 
 func addMappingToDb(longUrl string) (shortUrl string, err error) {
@@ -16,6 +17,14 @@ func addMappingToDb(longUrl string) (shortUrl string, err error) {
 		return "", err
 	}
 	return key, nil
+}
+
+func getFromDb(statement *sql.Stmt, indexKey string) (value string, found bool) {
+	row := statement.QueryRow(indexKey)
+	if err := row.Scan(&value); err != nil {
+		return "", false
+	}
+	return value, true
 }
 
 func getNextDatabaseId() uint {

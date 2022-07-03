@@ -34,6 +34,16 @@ func handlePostToMappings(c *gin.Context) {
 	c.JSON(http.StatusCreated, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
 }
 
+func handleGetFromKey(c *gin.Context) {
+	key := c.Param("key")
+	longUrl, found := getLongUrlFromDb(key)
+	if found {
+		c.Redirect(http.StatusMovedPermanently, longUrl)
+	} else {
+		c.HTML(http.StatusNotFound, "not_found.html", struct{}{})
+	}
+}
+
 type RequestBody struct {
 	LongUrl string `json:"longUrl" binding:"required"`
 }

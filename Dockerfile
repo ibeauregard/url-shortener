@@ -14,5 +14,7 @@ COPY --from=build-image /app/url_shortener .
 VOLUME ["/home/urlshortener/db/data"]
 RUN apk add --no-cache sqlite
 COPY internal/db ./db
+COPY internal/templates ./templates
+COPY internal/static ./static
 EXPOSE 8080
 CMD ["/bin/sh", "db/create-db.sh"]

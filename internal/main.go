@@ -12,7 +12,10 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
+	r.LoadHTMLFiles("templates/not_found.html")
+	r.Static("/static", "./static")
 	r.POST("/api/mappings", handlePostToMappings)
+	r.GET("/:key", handleGetFromKey)
 	err = r.Run()
 	if err != nil {
 		log.Panic(err)

@@ -11,6 +11,7 @@ const AppScheme = "http"
 
 var db, _ = sql.Open("sqlite3", "db/data/url-mappings.db")
 var keyFromLongUrlStmt, _ = db.Prepare("SELECT key FROM mappings WHERE long_url=?;")
+var longUrlFromKeyStmt, _ = db.Prepare("SELECT long_url FROM mappings WHERE key=?;")
 var insertStmt, _ = db.Prepare("INSERT INTO mappings (key, long_url) VALUES(?, ?)")
 var lastIdStmt, _ = db.Prepare("SELECT seq FROM sqlite_sequence WHERE name='mappings'")
 
