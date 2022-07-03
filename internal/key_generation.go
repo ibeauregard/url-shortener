@@ -1,8 +1,7 @@
 package main
 
 import (
-	"crypto/md5"
-	"encoding/binary"
+	"hash/crc32"
 )
 
 func generateKey(longUrl string) string {
@@ -10,8 +9,7 @@ func generateKey(longUrl string) string {
 }
 
 func checksum(str string) uint {
-	sum := md5.Sum([]byte(str))
-	return uint(binary.LittleEndian.Uint16(sum[:2])) // First 16 bits == first 2 bytes
+	return uint(crc32.ChecksumIEEE([]byte(str)))
 }
 
 func intToKey(num uint) string {
