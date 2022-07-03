@@ -13,6 +13,9 @@ func checksum(str string) uint {
 }
 
 func intToKey(num uint) string {
+	if num == 0 {
+		return alphabet[0:1]
+	}
 	var intToKeyRec func(uint) []byte
 	intToKeyRec = func(num uint) []byte {
 		if num == 0 {
