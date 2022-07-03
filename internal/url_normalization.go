@@ -66,10 +66,10 @@ func performBasicNormalization(s string) (string, error) {
 			result[name] = match[i]
 		}
 	}
-	return getUrlStringFromMap(result)
+	return getUrlStringFromMap(result), nil
 }
 
-func getUrlStringFromMap(urlMap map[string]string) (string, error) {
+func getUrlStringFromMap(urlMap map[string]string) string {
 	var stringBuilder strings.Builder
 	if urlMap["scheme"] != "" {
 		stringBuilder.WriteString(strings.ToLower(urlMap["scheme"]))
@@ -85,5 +85,5 @@ func getUrlStringFromMap(urlMap map[string]string) (string, error) {
 	stringBuilder.WriteString(urlMap["path"])
 	stringBuilder.WriteString(urlMap["query"])
 	stringBuilder.WriteString(urlMap["fragment"])
-	return stringBuilder.String(), nil
+	return stringBuilder.String()
 }
