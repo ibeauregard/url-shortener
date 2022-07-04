@@ -5,7 +5,11 @@ import (
 )
 
 func generateKey(longUrl string) string {
-	return intToKey(checksum(longUrl)%(alphabetLength*alphabetLength)) + intToKey(getNextDatabaseId())
+	prefix := intToKey(checksum(longUrl) % (alphabetLength * alphabetLength))
+	if len(prefix) == 1 {
+		prefix = alphabet[0:1] + prefix
+	}
+	return prefix + intToKey(getNextDatabaseId())
 }
 
 func checksum(str string) uint {
