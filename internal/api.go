@@ -40,8 +40,12 @@ func handleGetFromKey(c *gin.Context) {
 	if found {
 		c.Redirect(http.StatusMovedPermanently, longUrl)
 	} else {
-		c.HTML(http.StatusNotFound, "not_found.html", struct{}{})
+		serveNotFoundResponse(c)
 	}
+}
+
+func serveNotFoundResponse(c *gin.Context) {
+	c.HTML(http.StatusNotFound, "not_found.html", struct{}{})
 }
 
 type RequestBody struct {

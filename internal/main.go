@@ -16,6 +16,7 @@ func main() {
 	r.Static("/static", "./static")
 	r.POST("/api/mappings", handlePostToMappings)
 	r.GET("/:key", handleGetFromKey)
+	r.GET("/", serveNotFoundResponse)
 	err = r.Run()
 	if err != nil {
 		log.Panic(err)
