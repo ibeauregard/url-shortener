@@ -43,7 +43,8 @@ func normalize(s string) (*url.URL, error) {
 	}
 
 	multipleSlashRegex := regexp.MustCompile(`//+`)
-	u.Path = strings.TrimSuffix(multipleSlashRegex.ReplaceAllString(u.Path, "/"), "/")
+	u.Path = multipleSlashRegex.ReplaceAllString(u.Path, "/")
+	u.Path = strings.TrimSuffix(u.Path, "/")
 
 	v := u.Query()
 	u.RawQuery = v.Encode()
