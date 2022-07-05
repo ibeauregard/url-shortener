@@ -226,7 +226,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"longUrl\": \"http://shortener-test:8080\"}",
+					"raw": "{\"longUrl\": \"{{app_url}}\"}",
 					"options": {
 						"raw": {
 							"language": "json"
