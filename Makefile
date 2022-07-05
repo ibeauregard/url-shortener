@@ -9,11 +9,18 @@ run:
 
 restart: stop run
 
+func-tests: delete-test-db
+	docker compose up functional-tests
+	docker compose down
+
 clear-db:
 	docker exec -it url_shortener_container sh db/clear-db.sh
 
 delete-db:
 	@docker volume rm -f url_shortener_db &>/dev/null && echo "Deleted any existing database"
+
+delete-test-db:
+	@docker volume rm -f url-shortener_db-test &>/dev/null && echo "Deleted any existing test database"
 
 connect:
 	docker exec -it url_shortener_container sh

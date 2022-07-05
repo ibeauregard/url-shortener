@@ -1,0 +1,21 @@
+services:
+  shortener-test:
+    build: .
+    container_name: url_shortener_container_test
+    stdin_open: true
+    tty: true
+    volumes:
+      - db-test:/home/urlshortener/db/data
+    environment:
+      APP_HOST: "shortener-test:8080"
+
+  functional-tests:
+    image: postman/newman:5.3.1-alpine
+    command: run collection.json -e environment.json --bail
+    volumes:
+      - ./tests/functional:/etc/newman
+    depends_on:
+      - shortener-test
+
+volumes:
+  db-test:

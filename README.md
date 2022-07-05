@@ -12,7 +12,7 @@ Make sure you have [Docker installed](https://docs.docker.com/get-docker/).
 
 ## How to run
 
-After you cloned the repo, you can simply run `make build run` from the project's root directory. When you build the project for the first time, expect a relatively long build, since a lot of dependencies will need to be downloaded. Subsequent builds will be much faster.
+After you cloned the repo, you can simply execute `make build run` from the project's root directory. When you build the project for the first time, expect a relatively long build, since a lot of dependencies will need to be downloaded. Subsequent builds will be much faster.
 
 See the Makefile for a list of `make` targets that you can use if needed.
 
@@ -49,9 +49,11 @@ You can use the provided short URL in a web browser, as you would you any other 
 
 ## How to test
 
+### Unit tests
 A unit test suite is automatically run before each build (see Dockerfile). The build will fail is the test suite is not successful.
 
-(A functional test suite will be added shortly.)
+### Functional tests
+You can execute a functional test suite by executing `make func-tests`.
 
 ## Key points about design and functionality
 
