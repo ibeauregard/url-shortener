@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -71,9 +70,9 @@ func TestGetNormalizedUrl(t *testing.T) {
 			MockJsonPost(ctx, test.requestBodyContent)
 			urlOutput, err := getNormalizedUrl(ctx)
 			assert.EqualValues(t, test.expectedUrl, urlOutput)
-			if (err == nil) != (test.expectedError == nil) {
-				t.Error("Expected and actual errors have different nullness")
-			}
+			assert.Condition(t, func() bool {
+				return (err == nil) == (test.expectedError == nil)
+			})
 			assert.EqualValues(t, test.expectedHttpStatus, w.Code)
 		})
 	}
@@ -92,9 +91,7 @@ func TestGetShortUrl(t *testing.T) {
 	for _, test := range getShortUrlTests {
 		testName := fmt.Sprintf("getShortUrl(%q)", test.arg)
 		t.Run(testName, func(t *testing.T) {
-			if output := getShortUrl(test.arg); output != test.expected {
-				t.Errorf("got %q, expected %q", output, test.expected)
-			}
+			assert.EqualValues(t, test.expected, getShortUrl(test.arg))
 		})
 	}
 }
@@ -113,9 +110,7 @@ func TestGetSuccessResponseBody(t *testing.T) {
 	for _, test := range getSuccessResponseBodyTests {
 		testName := fmt.Sprintf("getSuccessResponseBody(%q, %q)", test.arg1, test.arg2)
 		t.Run(testName, func(t *testing.T) {
-			if output := getSuccessResponseBody(test.arg1, test.arg2); !cmp.Equal(output, test.expected) {
-				t.Errorf("got %v, expected %v", output, test.expected)
-			}
+			assert.EqualValues(t, test.expected, getSuccessResponseBody(test.arg1, test.arg2))
 		})
 	}
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -28,9 +29,7 @@ func TestChecksum(t *testing.T) {
 	for _, test := range checksumTests {
 		testName := fmt.Sprintf("checksum(%q)", test.arg)
 		t.Run(testName, func(t *testing.T) {
-			if output := checksum(test.arg); output != test.expected {
-				t.Errorf("got %v, expected %v", output, test.expected)
-			}
+			assert.EqualValues(t, test.expected, checksum(test.arg))
 		})
 	}
 }
@@ -63,9 +62,7 @@ func TestIntToKey(t *testing.T) {
 	for _, test := range intToKeyTests {
 		testName := fmt.Sprintf("intToKey(%v)", test.arg)
 		t.Run(testName, func(t *testing.T) {
-			if output := intToKey(test.arg); output != test.expected {
-				t.Errorf("got %q, expected %q", output, test.expected)
-			}
+			assert.EqualValues(t, test.expected, intToKey(test.arg))
 		})
 	}
 }

@@ -3,14 +3,15 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/url"
 	"testing"
 )
 
 type normalizeTest struct {
-	arg       string
-	expected1 *url.URL
-	expected2 error
+	arg            string
+	expectedOutput *url.URL
+	expectedError  error
 }
 
 var normalizeTests = []normalizeTest{
@@ -61,20 +62,19 @@ func TestNormalize(t *testing.T) {
 	for _, test := range normalizeTests {
 		testName := fmt.Sprintf("normalize(%q)", test.arg)
 		t.Run(testName, func(t *testing.T) {
-			output1, output2 := normalize(test.arg)
-			if (output1 == nil) != (test.expected1 == nil) ||
-				(output1 != nil && test.expected1 != nil && *output1 != *test.expected1) ||
-				(output2 == nil) != (test.expected2 == nil) {
-				t.Errorf("got (%+v, %v), expected (%+v, %v)", *output1, output2, *test.expected1, test.expected2)
-			}
+			output, err := normalize(test.arg)
+			assert.EqualValues(t, test.expectedOutput, output)
+			assert.Condition(t, func() bool {
+				return (err == nil) == (test.expectedError == nil)
+			})
 		})
 	}
 }
 
 type performBasicNormalizationTest struct {
-	arg       string
-	expected1 string
-	expected2 error
+	arg            string
+	expectedOutput string
+	expectedError  error
 }
 
 var performBasicNormalizationTests = []performBasicNormalizationTest{
@@ -98,10 +98,11 @@ func TestPerformBasicNormalization(t *testing.T) {
 	for _, test := range performBasicNormalizationTests {
 		testName := fmt.Sprintf("performBasicNormalization(%q)", test.arg)
 		t.Run(testName, func(t *testing.T) {
-			output1, output2 := performBasicNormalization(test.arg)
-			if output1 != test.expected1 || (output2 == nil) != (test.expected2 == nil) {
-				t.Errorf("got (%q, %v), expected (%q, %v)", output1, output2, test.expected1, test.expected2)
-			}
+			output, err := performBasicNormalization(test.arg)
+			assert.EqualValues(t, test.expectedOutput, output)
+			assert.Condition(t, func() bool {
+				return (err == nil) == (test.expectedError == nil)
+			})
 		})
 	}
 }
@@ -166,9 +167,7 @@ func TestGetUrlStringFromMap(t *testing.T) {
 	for _, test := range getUrlStringFromMapTests {
 		testName := fmt.Sprintf("getUrlStringFromMap(%v)", test.arg)
 		t.Run(testName, func(t *testing.T) {
-			if output := getUrlStringFromMap(test.arg); output != test.expected {
-				t.Errorf("got %q, expected %q", output, test.expected)
-			}
+			assert.EqualValues(t, test.expected, getUrlStringFromMap(test.arg))
 		})
 	}
 }
