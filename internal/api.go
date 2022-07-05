@@ -19,12 +19,12 @@ func handlePostToMappings(c *gin.Context) {
 		return
 	}
 	normalizedUrlAsString := normalizedUrl.String()
-	key, found := getKeyFromDb(normalizedUrlAsString)
+	key, found := getKey(normalizedUrlAsString)
 	if found {
 		c.JSON(http.StatusOK, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
 		return
 	}
-	key, err = addMappingToDb(normalizedUrlAsString)
+	key, err = addMapping(normalizedUrlAsString)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal Server Error: could not insert into database",
@@ -36,7 +36,7 @@ func handlePostToMappings(c *gin.Context) {
 
 func handleGetFromKey(c *gin.Context) {
 	key := c.Param("key")
-	longUrl, found := getLongUrlFromDb(key)
+	longUrl, found := getLongUrl(key)
 	if found {
 		c.Redirect(http.StatusMovedPermanently, longUrl)
 	} else {
