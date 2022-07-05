@@ -4,12 +4,12 @@ import (
 	"hash/crc32"
 )
 
-func generateKey(longUrl string) string {
+func generateKey(longUrl string, id uint) string {
 	prefix := intToKey(checksum(longUrl) % (alphabetLength * alphabetLength))
 	if len(prefix) == 1 {
 		prefix = alphabet[0:1] + prefix
 	}
-	return prefix + intToKey(getNextDatabaseId())
+	return prefix + intToKey(id)
 }
 
 func checksum(str string) uint {

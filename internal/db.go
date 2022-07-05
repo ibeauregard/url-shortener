@@ -19,7 +19,7 @@ func getLongUrl(key string) (longUrl string, found bool) {
 }
 
 func addMapping(longUrl string) (shortUrl string, err error) {
-	key := generateKey(longUrl)
+	key := generateKey(longUrl, getNextDatabaseId())
 	err = repository.Create(&repo.MappingModel{
 		Key:     key,
 		LongUrl: longUrl,
