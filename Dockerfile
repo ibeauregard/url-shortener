@@ -6,7 +6,7 @@ WORKDIR /app
 RUN go mod download
 RUN go install github.com/mattn/go-sqlite3
 COPY . .
-RUN go test -v ./internal
+RUN go test -v ./...
 RUN go build -o url_shortener ./internal
 
 FROM alpine:3.16.0
