@@ -23,11 +23,17 @@ func NewMock() (*sql.DB, sqlmock.Sqlmock) {
 	return db, mock
 }
 
+func TestClose(t *testing.T) {
+	db, _ := NewMock()
+	repo := &repository{db}
+	repo.Close()
+	assert.Error(t, repo.db.Ping())
+}
+
 func TestFindByLongUrl(t *testing.T) {
 	db, mock := NewMock()
 	query := `SELECT id, key, long_url FROM mappings WHERE long_url=?`
-	rows := sqlmock.NewRows([]string{"id", "key", "long_url"}).
-		AddRow(m.ID, m.Key, m.LongUrl)
+	rows := sqlmock.NewRows([]string{"id", "key", "long_url"}).AddRow(m.ID, m.Key, m.LongUrl)
 	mock.ExpectQuery(query).WithArgs(m.LongUrl).WillReturnRows(rows)
 	mapping, err := (&repository{db}).FindByLongUrl(m.LongUrl)
 	assert.NotNil(t, mapping)
@@ -40,6 +46,26 @@ func TestFindByLongUrlError(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "key", "long_url"})
 	mock.ExpectQuery(query).WithArgs(m.LongUrl).WillReturnRows(rows)
 	mapping, err := (&repository{db}).FindByLongUrl(m.LongUrl)
+	assert.Empty(t, mapping)
+	assert.Error(t, err)
+}
+
+func TestFindByKey(t *testing.T) {
+	db, mock := NewMock()
+	query := `SELECT id, key, long_url FROM mappings WHERE key=?`
+	rows := sqlmock.NewRows([]string{"id", "key", "long_url"}).AddRow(m.ID, m.Key, m.LongUrl)
+	mock.ExpectQuery(query).WithArgs(m.LongUrl).WillReturnRows(rows)
+	mapping, err := (&repository{db}).FindByKey(m.LongUrl)
+	assert.NotNil(t, mapping)
+	assert.NoError(t, err)
+}
+
+func TestFindByKeyError(t *testing.T) {
+	db, mock := NewMock()
+	query := `SELECT id, key, long_url FROM mappings WHERE key=?`
+	rows := sqlmock.NewRows([]string{"id", "key", "long_url"})
+	mock.ExpectQuery(query).WithArgs(m.LongUrl).WillReturnRows(rows)
+	mapping, err := (&repository{db}).FindByKey(m.LongUrl)
 	assert.Empty(t, mapping)
 	assert.Error(t, err)
 }
