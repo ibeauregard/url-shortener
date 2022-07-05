@@ -12,8 +12,8 @@ type repository struct {
 	db *sql.DB
 }
 
-func NewRepository(dialect, dataSourceName string) (repo.Repository, error) {
-	db, err := sql.Open(dialect, dataSourceName)
+func NewRepository(dataSourceName string) (repo.Repository, error) {
+	db, err := sql.Open("sqlite3", dataSourceName)
 	if err != nil {
 		return nil, err
 	}
