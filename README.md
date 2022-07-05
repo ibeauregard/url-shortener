@@ -1,4 +1,5 @@
 # URL shortener (backend)
+![Build and tests](https://github.com/ibeauregard/url-shortener/actions/workflows/build-and-test.yml/badge.svg)
 
 ## Overview
 
