@@ -1,7 +1,7 @@
 package repository
 
 type Repository interface {
-	Close()
+	Close() error
 	FindByLongUrl(longUrl string) (*MappingModel, error)
 	FindByKey(key string) (*MappingModel, error)
 	Create(mapping *MappingModel) error

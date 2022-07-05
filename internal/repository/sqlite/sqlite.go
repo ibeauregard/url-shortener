@@ -24,11 +24,12 @@ func NewRepository(dataSourceName string) (repo.Repository, error) {
 	return &repository{db}, nil
 }
 
-func (r *repository) Close() {
+func (r *repository) Close() error {
 	err := r.db.Close()
 	if err != nil {
 		log.Printf("Unable to close database %v", r.db)
 	}
+	return err
 }
 
 func (r *repository) FindByLongUrl(longUrl string) (*repo.MappingModel, error) {

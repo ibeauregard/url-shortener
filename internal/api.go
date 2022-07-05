@@ -7,40 +7,44 @@ import (
 	"net/url"
 )
 
-func handlePostToMappings(c *gin.Context) {
-	normalizedUrl, err := getNormalizedUrl(c)
-	if err != nil {
-		return
+func handlePostToMappings(repo repoProxy) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		normalizedUrl, err := getNormalizedUrl(c)
+		if err != nil {
+			return
+		}
+		if normalizedUrl.Host == AppHost {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{
+				"message": fmt.Sprintf("Domain %s is blacklisted", AppHost),
+			})
+			return
+		}
+		normalizedUrlAsString := normalizedUrl.String()
+		key, found := repo.getKey(normalizedUrlAsString)
+		if found {
+			c.JSON(http.StatusOK, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
+			return
+		}
+		key, err = repo.addMapping(normalizedUrlAsString)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "Internal Server Error: could not insert into database",
+			})
+			return
+		}
+		c.JSON(http.StatusCreated, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
 	}
-	if normalizedUrl.Host == AppHost {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"message": fmt.Sprintf("Domain %s is blacklisted", AppHost),
-		})
-		return
-	}
-	normalizedUrlAsString := normalizedUrl.String()
-	key, found := repository.getKey(normalizedUrlAsString)
-	if found {
-		c.JSON(http.StatusOK, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
-		return
-	}
-	key, err = repository.addMapping(normalizedUrlAsString)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Internal Server Error: could not insert into database",
-		})
-		return
-	}
-	c.JSON(http.StatusCreated, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
 }
 
-func handleGetFromKey(c *gin.Context) {
-	key := c.Param("key")
-	longUrl, found := repository.getLongUrl(key)
-	if found {
-		c.Redirect(http.StatusMovedPermanently, longUrl)
-	} else {
-		serveNotFoundResponse(c)
+func handleGetFromKey(repo repoProxy) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		key := c.Param("key")
+		longUrl, found := repo.getLongUrl(key)
+		if found {
+			c.Redirect(http.StatusMovedPermanently, longUrl)
+		} else {
+			serveNotFoundResponse(c)
+		}
 	}
 }
 

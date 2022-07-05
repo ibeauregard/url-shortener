@@ -12,13 +12,19 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
-	r.LoadHTMLFiles("templates/not_found.html")
-	r.Static("/static", "./static")
-	r.POST("/api/mappings", handlePostToMappings)
-	r.GET("/:key", handleGetFromKey)
-	r.GET("/", serveNotFoundResponse)
+	repo, _ := newRepoProxy("db/data/url-mappings.db")
+	defer repo.close()
+	performRouting(r, repo)
 	err = r.Run()
 	if err != nil {
 		log.Panic(err)
 	}
+}
+
+func performRouting(r *gin.Engine, repo repoProxy) {
+	r.LoadHTMLFiles("templates/not_found.html")
+	r.Static("/static", "./static")
+	r.POST("/api/mappings", handlePostToMappings(repo))
+	r.GET("/:key", handleGetFromKey(repo))
+	r.GET("/", serveNotFoundResponse)
 }

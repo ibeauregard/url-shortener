@@ -7,7 +7,7 @@ import (
 )
 
 type repoProxy interface {
-	close()
+	close() error
 	getKey(longUrl string) (key string, found bool)
 	getLongUrl(key string) (longUrl string, found bool)
 	addMapping(longUrl string) (shortUrl string, err error)
@@ -25,11 +25,12 @@ func newRepoProxy(dataSourceName string) (repoProxy, error) {
 	return &repoProxyImpl{r: repository}, nil
 }
 
-func (proxy *repoProxyImpl) close() {
-	err := proxy.r.Close
+func (proxy *repoProxyImpl) close() error {
+	err := proxy.r.Close()
 	if err != nil {
 		log.Printf("Unable to close repo %v", proxy.r)
 	}
+	return err
 }
 
 func (proxy *repoProxyImpl) getKey(longUrl string) (key string, found bool) {
