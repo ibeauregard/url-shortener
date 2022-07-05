@@ -14,7 +14,7 @@ func handlePostToMappings(c *gin.Context) {
 	}
 	if normalizedUrl.Host == AppHost {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"errorMessage": fmt.Sprintf("Domain %s is blacklisted", AppHost),
+			"message": fmt.Sprintf("Domain %s is blacklisted", AppHost),
 		})
 		return
 	}
@@ -27,7 +27,7 @@ func handlePostToMappings(c *gin.Context) {
 	key, err = addMappingToDb(normalizedUrlAsString)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"errorMessage": "Internal Server Error: could not insert into database",
+			"message": "Internal Server Error: could not insert into database",
 		})
 		return
 	}
@@ -56,12 +56,12 @@ func getNormalizedUrl(c *gin.Context) (*url.URL, error) {
 	var payload RequestBody
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Expected JSON with non-empty 'longUrl' attribute"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Expected JSON with non-empty 'longUrl' attribute"})
 		return nil, err
 	}
 	normalizedUrl, err := normalize(payload.LongUrl)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"errorMessage": "Not a valid URL"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Not a valid URL"})
 		return nil, err
 	}
 	return normalizedUrl, nil
