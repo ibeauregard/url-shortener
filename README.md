@@ -8,7 +8,7 @@ The requests for short URLs are made via a simple JSON API. Once you have a shor
 
 ## Requirements
 
-Make sure you have [Docker installed](https://docs.docker.com/get-docker/).
+Make sure you have [Docker Compose installed](https://docs.docker.com/compose/install/).
 
 ## How to run
 
