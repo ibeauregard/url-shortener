@@ -10,7 +10,7 @@ run:
 restart: stop run
 
 func-tests: delete-test-db
-	docker compose up functional-tests
+	docker compose up --build functional-tests
 	docker compose down
 
 clear-db:

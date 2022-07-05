@@ -13,8 +13,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -53,8 +57,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -93,8 +101,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -133,8 +145,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -173,8 +189,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -213,8 +233,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -253,8 +277,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -293,8 +321,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -333,8 +365,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -373,8 +409,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -413,8 +453,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -453,8 +497,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -493,8 +541,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -533,8 +585,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -573,8 +629,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -613,8 +673,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -653,8 +717,15 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -693,9 +764,18 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
+							"});",
+							"",
+							"pm.environment.set(\"shortUrl\", jsonResponse.shortUrl)"
 						],
 						"type": "text/javascript"
 					}
@@ -727,14 +807,66 @@
 			"response": []
 		},
 		{
+			"name": "Redirect to google.com from short URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is correct\", function () {",
+							"    pm.response.to.have.status(301);",
+							"});",
+							"pm.test(\"Redirect location is correct\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"http://google.com\")",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"followRedirects": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"longUrl\": \"google.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{shortUrl}}",
+					"host": [
+						"{{shortUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "twitter.com",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -773,9 +905,18 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
+							"});",
+							"",
+							"pm.environment.set(\"shortUrl\", pm.response.json().shortUrl)"
 						],
 						"type": "text/javascript"
 					}
@@ -807,14 +948,66 @@
 			"response": []
 		},
 		{
+			"name": "Redirect to twitter.com from short URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is correct\", function () {",
+							"    pm.response.to.have.status(301);",
+							"});",
+							"pm.test(\"Redirect location is correct\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"http://twitter.com\")",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"followRedirects": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"longUrl\": \"google.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{shortUrl}}",
+					"host": [
+						"{{shortUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "facebook.com",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -853,9 +1046,18 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
+							"});",
+							"",
+							"pm.environment.set(\"shortUrl\", pm.response.json().shortUrl)"
 						],
 						"type": "text/javascript"
 					}
@@ -887,14 +1089,66 @@
 			"response": []
 		},
 		{
+			"name": "Redirect to facebook.com from short URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is correct\", function () {",
+							"    pm.response.to.have.status(301);",
+							"});",
+							"pm.test(\"Redirect location is correct\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"http://facebook.com\")",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"followRedirects": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"longUrl\": \"google.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{shortUrl}}",
+					"host": [
+						"{{shortUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "linkedin.com",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
 							"});"
 						],
 						"type": "text/javascript"
@@ -933,9 +1187,18 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is correct\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"const jsonResponse = pm.response.json()",
+							"",
+							"pm.test(\"JSON response has expected attributes\", function () {",
+							"    pm.expect(jsonResponse.longUrl).to.be.a(\"string\").not.empty",
+							"    pm.expect(jsonResponse.shortUrl).to.be.a(\"string\").not.empty",
+							"});",
+							"",
+							"pm.environment.set(\"shortUrl\", pm.response.json().shortUrl)"
 						],
 						"type": "text/javascript"
 					}
@@ -961,6 +1224,51 @@
 					"path": [
 						"api",
 						"mappings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Redirect to linkedin.com from short URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is correct\", function () {",
+							"    pm.response.to.have.status(301);",
+							"});",
+							"pm.test(\"Redirect location is correct\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"http://linkedin.com\")",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"followRedirects": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"longUrl\": \"google.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{shortUrl}}",
+					"host": [
+						"{{shortUrl}}"
 					]
 				}
 			},
