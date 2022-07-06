@@ -14,51 +14,49 @@ import (
 	"testing"
 )
 
-type getNormalizedUrlTest struct {
-	requestBodyContent map[string]any
-	expectedUrl        *url.URL
-	expectedError      error
-	expectedHttpStatus int
-}
-
-var getNormalizedUrlTests = []getNormalizedUrlTest{
-	{
-		requestBodyContent: map[string]any{},
-		expectedUrl:        nil,
-		expectedError:      errors.New(""),
-		expectedHttpStatus: http.StatusBadRequest,
-	},
-	{
-		requestBodyContent: map[string]any{"foo": "bar"},
-		expectedUrl:        nil,
-		expectedError:      errors.New(""),
-		expectedHttpStatus: http.StatusBadRequest,
-	},
-	{
-		requestBodyContent: map[string]any{"longUrl": ""},
-		expectedUrl:        nil,
-		expectedError:      errors.New(""),
-		expectedHttpStatus: http.StatusBadRequest,
-	},
-	{
-		requestBodyContent: map[string]any{"longUrl": ";[*"},
-		expectedUrl:        nil,
-		expectedError:      errors.New(""),
-		expectedHttpStatus: http.StatusUnprocessableEntity,
-	},
-	{
-		requestBodyContent: map[string]any{"longUrl": "http://gooGlE.ca:80/search//results/"},
-		expectedUrl: &url.URL{
-			Scheme: "http",
-			Host:   "google.ca",
-			Path:   "/search/results",
-		},
-		expectedError:      nil,
-		expectedHttpStatus: http.StatusOK,
-	},
-}
-
 func TestGetNormalizedUrl(t *testing.T) {
+	getNormalizedUrlTests := []struct {
+		requestBodyContent map[string]any
+		expectedUrl        *url.URL
+		expectedError      error
+		expectedHttpStatus int
+	}{
+		{
+			requestBodyContent: map[string]any{},
+			expectedUrl:        nil,
+			expectedError:      errors.New(""),
+			expectedHttpStatus: http.StatusBadRequest,
+		},
+		{
+			requestBodyContent: map[string]any{"foo": "bar"},
+			expectedUrl:        nil,
+			expectedError:      errors.New(""),
+			expectedHttpStatus: http.StatusBadRequest,
+		},
+		{
+			requestBodyContent: map[string]any{"longUrl": ""},
+			expectedUrl:        nil,
+			expectedError:      errors.New(""),
+			expectedHttpStatus: http.StatusBadRequest,
+		},
+		{
+			requestBodyContent: map[string]any{"longUrl": ";[*"},
+			expectedUrl:        nil,
+			expectedError:      errors.New(""),
+			expectedHttpStatus: http.StatusUnprocessableEntity,
+		},
+		{
+			requestBodyContent: map[string]any{"longUrl": "http://gooGlE.ca:80/search//results/"},
+			expectedUrl: &url.URL{
+				Scheme: "http",
+				Host:   "google.ca",
+				Path:   "/search/results",
+			},
+			expectedError:      nil,
+			expectedHttpStatus: http.StatusOK,
+		},
+	}
+
 	for _, test := range getNormalizedUrlTests {
 		testName := fmt.Sprintf("getNormalizedUrl with %v as request body", test.requestBodyContent)
 		t.Run(testName, func(t *testing.T) {
@@ -78,17 +76,15 @@ func TestGetNormalizedUrl(t *testing.T) {
 	}
 }
 
-type getSuccessResponseBodyTest struct {
-	arg1     string
-	arg2     string
-	expected gin.H
-}
-
-var getSuccessResponseBodyTests = []getSuccessResponseBodyTest{
-	{arg1: "Foo", arg2: "Bar", expected: gin.H{"longUrl": "Foo", "shortUrl": "Bar"}},
-}
-
 func TestGetSuccessResponseBody(t *testing.T) {
+	getSuccessResponseBodyTests := []struct {
+		arg1     string
+		arg2     string
+		expected gin.H
+	}{
+		{arg1: "Foo", arg2: "Bar", expected: gin.H{"longUrl": "Foo", "shortUrl": "Bar"}},
+	}
+
 	for _, test := range getSuccessResponseBodyTests {
 		testName := fmt.Sprintf("getSuccessResponseBody(%q, %q)", test.arg1, test.arg2)
 		t.Run(testName, func(t *testing.T) {
@@ -97,16 +93,14 @@ func TestGetSuccessResponseBody(t *testing.T) {
 	}
 }
 
-type getShortUrlTest struct {
-	arg      string
-	expected string
-}
-
-var getShortUrlTests = []getShortUrlTest{
-	{"my_key", AppScheme + "://" + AppHost + "/my_key"},
-}
-
 func TestGetShortUrl(t *testing.T) {
+	getShortUrlTests := []struct {
+		arg      string
+		expected string
+	}{
+		{"my_key", AppScheme + "://" + AppHost + "/my_key"},
+	}
+
 	for _, test := range getShortUrlTests {
 		testName := fmt.Sprintf("getShortUrl(%q)", test.arg)
 		t.Run(testName, func(t *testing.T) {
