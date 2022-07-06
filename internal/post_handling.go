@@ -7,17 +7,13 @@ import (
 	"net/url"
 )
 
-type postHandler interface {
-	handle(repoProxy)
-}
-
 type concretePostHandler struct {
 	ctx *gin.Context
 }
 
 func handlePostToMappings(repo repoProxy) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		postHandler(&concretePostHandler{ctx}).handle(repo)
+		(&concretePostHandler{ctx}).handle(repo)
 	}
 }
 

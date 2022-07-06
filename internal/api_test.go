@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"testing"
 )
@@ -59,25 +60,25 @@ var getNormalizedUrlTests = []getNormalizedUrlTest{
 	},
 }
 
-//func TestGetNormalizedUrl(t *testing.T) {
-//	for _, test := range getNormalizedUrlTests {
-//		testName := fmt.Sprintf("getNormalizedUrl with %v as request body", test.requestBodyContent)
-//		t.Run(testName, func(t *testing.T) {
-//			w := httptest.NewRecorder()
-//			ctx, _ := gin.CreateTestContext(w)
-//			ctx.Request = &http.Request{
-//				Header: make(http.Header),
-//			}
-//			MockJsonPost(ctx, test.requestBodyContent)
-//			urlOutput, err := getNormalizedUrl(ctx)
-//			assert.EqualValues(t, test.expectedUrl, urlOutput)
-//			assert.Condition(t, func() bool {
-//				return (err == nil) == (test.expectedError == nil)
-//			})
-//			assert.EqualValues(t, test.expectedHttpStatus, w.Code)
-//		})
-//	}
-//}
+func TestGetNormalizedUrl(t *testing.T) {
+	for _, test := range getNormalizedUrlTests {
+		testName := fmt.Sprintf("getNormalizedUrl with %v as request body", test.requestBodyContent)
+		t.Run(testName, func(t *testing.T) {
+			w := httptest.NewRecorder()
+			ctx, _ := gin.CreateTestContext(w)
+			ctx.Request = &http.Request{
+				Header: make(http.Header),
+			}
+			MockJsonPost(ctx, test.requestBodyContent)
+			urlOutput, err := (&concretePostHandler{ctx}).getNormalizedUrl()
+			assert.EqualValues(t, test.expectedUrl, urlOutput)
+			assert.Condition(t, func() bool {
+				return (err == nil) == (test.expectedError == nil)
+			})
+			assert.EqualValues(t, test.expectedHttpStatus, w.Code)
+		})
+	}
+}
 
 type getShortUrlTest struct {
 	arg      string
