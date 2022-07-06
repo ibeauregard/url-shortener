@@ -52,12 +52,10 @@ func serveNotFoundResponse(c *gin.Context) {
 	c.HTML(http.StatusNotFound, "not_found.html", struct{}{})
 }
 
-type RequestBody struct {
-	LongUrl string `json:"longUrl" binding:"required"`
-}
-
 func getNormalizedUrl(c *gin.Context) (*url.URL, error) {
-	var payload RequestBody
+	var payload struct {
+		LongUrl string `json:"longUrl" binding:"required"`
+	}
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Expected JSON with non-empty 'longUrl' attribute"})
