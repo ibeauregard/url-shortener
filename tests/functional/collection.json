@@ -827,21 +827,11 @@
 				}
 			],
 			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
 				"followRedirects": false
 			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"longUrl\": \"google.com\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{shortUrl}}",
 					"host": [
@@ -968,21 +958,11 @@
 				}
 			],
 			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
 				"followRedirects": false
 			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"longUrl\": \"google.com\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{shortUrl}}",
 					"host": [
@@ -1109,21 +1089,11 @@
 				}
 			],
 			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
 				"followRedirects": false
 			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"longUrl\": \"google.com\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{shortUrl}}",
 					"host": [
@@ -1250,21 +1220,11 @@
 				}
 			],
 			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
 				"followRedirects": false
 			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"longUrl\": \"google.com\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{shortUrl}}",
 					"host": [
