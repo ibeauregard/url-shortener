@@ -1,23 +1,28 @@
-package main
+package handling
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/url"
+	"os"
 )
+
+var AppHost = os.Getenv("APP_HOST")
+
+const AppScheme = "http"
 
 type concretePostHandler struct {
 	ctx *gin.Context
 }
 
-func handlePostToMappings(repo repoProxy) gin.HandlerFunc {
+func HandlePostToMappings(repo RepoProxy) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		(&concretePostHandler{ctx}).handle(repo)
 	}
 }
 
-func (handler *concretePostHandler) handle(repo repoProxy) {
+func (handler *concretePostHandler) handle(repo RepoProxy) {
 	normalizedUrl, err := handler.getNormalizedUrl()
 	if err != nil {
 		return

@@ -1,4 +1,4 @@
-package main
+package handling
 
 import (
 	repo "github.com/ibeauregard/url-shortener/internal/repository"
@@ -6,8 +6,8 @@ import (
 	"log"
 )
 
-type repoProxy interface {
-	close() error
+type RepoProxy interface {
+	Close() error
 	getKey(longUrl string) (key string, found bool)
 	getLongUrl(key string) (longUrl string, found bool)
 	addMapping(longUrl string) (shortUrl string, err error)
@@ -17,7 +17,7 @@ type concreteRepoProxy struct {
 	r repo.Repository
 }
 
-func newRepoProxy(dataSourceName string) (repoProxy, error) {
+func NewRepoProxy(dataSourceName string) (RepoProxy, error) {
 	repository, err := sqlite.NewRepository(dataSourceName)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func newRepoProxy(dataSourceName string) (repoProxy, error) {
 	return &concreteRepoProxy{r: repository}, nil
 }
 
-func (proxy *concreteRepoProxy) close() error {
+func (proxy *concreteRepoProxy) Close() error {
 	err := proxy.r.Close()
 	if err != nil {
 		log.Printf("Unable to close repo %v", proxy.r)

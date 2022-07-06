@@ -1,6 +1,4 @@
-package main
-
-// TODO: distribute across new files
+package handling
 
 import (
 	"bytes"
@@ -80,24 +78,6 @@ func TestGetNormalizedUrl(t *testing.T) {
 	}
 }
 
-type getShortUrlTest struct {
-	arg      string
-	expected string
-}
-
-var getShortUrlTests = []getShortUrlTest{
-	{"my_key", AppScheme + "://" + AppHost + "/my_key"},
-}
-
-func TestGetShortUrl(t *testing.T) {
-	for _, test := range getShortUrlTests {
-		testName := fmt.Sprintf("getShortUrl(%q)", test.arg)
-		t.Run(testName, func(t *testing.T) {
-			assert.EqualValues(t, test.expected, getShortUrl(test.arg))
-		})
-	}
-}
-
 type getSuccessResponseBodyTest struct {
 	arg1     string
 	arg2     string
@@ -113,6 +93,24 @@ func TestGetSuccessResponseBody(t *testing.T) {
 		testName := fmt.Sprintf("getSuccessResponseBody(%q, %q)", test.arg1, test.arg2)
 		t.Run(testName, func(t *testing.T) {
 			assert.EqualValues(t, test.expected, getSuccessResponseBody(test.arg1, test.arg2))
+		})
+	}
+}
+
+type getShortUrlTest struct {
+	arg      string
+	expected string
+}
+
+var getShortUrlTests = []getShortUrlTest{
+	{"my_key", AppScheme + "://" + AppHost + "/my_key"},
+}
+
+func TestGetShortUrl(t *testing.T) {
+	for _, test := range getShortUrlTests {
+		testName := fmt.Sprintf("getShortUrl(%q)", test.arg)
+		t.Run(testName, func(t *testing.T) {
+			assert.EqualValues(t, test.expected, getShortUrl(test.arg))
 		})
 	}
 }

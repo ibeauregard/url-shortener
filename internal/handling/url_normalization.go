@@ -1,7 +1,7 @@
 // Adapted from https://github.com/sekimura/go-normalize-url/blob/master/normalizeurl.go
 // The original author decided to always strip the leading www, which I believe is not advisable
 
-package main
+package handling
 
 import (
 	"fmt"

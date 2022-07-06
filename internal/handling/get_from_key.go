@@ -1,22 +1,22 @@
-package main
+package handling
 
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func handleGetFromKey(repo repoProxy) gin.HandlerFunc {
+func HandleGetFromKey(repo RepoProxy) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		handle(c, repo)
 	}
 }
 
-func handle(ctx *gin.Context, repo repoProxy) {
+func handle(ctx *gin.Context, repo RepoProxy) {
 	key := ctx.Param("key")
 	longUrl, found := repo.getLongUrl(key)
 	if found {
 		ctx.Redirect(http.StatusMovedPermanently, longUrl)
 	} else {
-		serveNotFoundResponse(ctx)
+		ServeNotFoundResponse(ctx)
 	}
 }
