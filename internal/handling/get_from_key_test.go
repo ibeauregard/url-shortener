@@ -40,9 +40,8 @@ func TestHandleFound(t *testing.T) {
 }
 
 func TestHandleNotFound(t *testing.T) {
-	dummyLongUrl := ""
 	mock := &repoProxyMock{
-		expectedUrl:         dummyLongUrl,
+		expectedUrl:         "",
 		expectedFoundStatus: false,
 	}
 	w := httptest.NewRecorder()
