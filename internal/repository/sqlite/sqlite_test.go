@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/DATA-DOG/go-sqlmock"
 	r "github.com/ibeauregard/url-shortener/internal/repository"
 	"github.com/stretchr/testify/assert"
@@ -16,11 +17,36 @@ var m = &r.MappingModel{
 }
 
 func NewMock() (*sql.DB, sqlmock.Sqlmock) {
-	db, mock, err := sqlmock.New()
+	db, mock, err := sqlmock.New(sqlmock.MonitorPingsOption(true))
 	if err != nil {
 		log.Fatalf("unexpected error %q when opening a stub database connection", err)
 	}
 	return db, mock
+}
+
+func TestNewRepositoryOpenError(t *testing.T) {
+	_, err := NewRepository("", func(dialect string, dsn string) (*sql.DB, error) {
+		return nil, errors.New("")
+	})
+	assert.NotNil(t, err)
+}
+
+func TestNewRepositoryPingError(t *testing.T) {
+	db, mock := NewMock()
+	mock.ExpectPing().WillReturnError(errors.New(""))
+	_, err := NewRepository("", func(dialect string, dsn string) (*sql.DB, error) {
+		return db, nil
+	})
+	assert.NotNil(t, err)
+}
+
+func TestNewRepositorySuccess(t *testing.T) {
+	db, mock := NewMock()
+	mock.ExpectPing()
+	_, err := NewRepository("", func(dialect string, dsn string) (*sql.DB, error) {
+		return db, nil
+	})
+	assert.Nil(t, err)
 }
 
 func TestClose(t *testing.T) {

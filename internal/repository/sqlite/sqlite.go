@@ -8,8 +8,15 @@ import (
 	"time"
 )
 
+type SqlDb interface {
+	Close() error
+	Ping() error
+	QueryRowContext(context.Context, string, ...any) *sql.Row
+	PrepareContext(context.Context, string) (*sql.Stmt, error)
+}
+
 type repository struct {
-	db *sql.DB
+	db SqlDb
 }
 
 type sqlOpener func(string, string) (*sql.DB, error)
