@@ -1,9 +1,7 @@
 package handling
 
 import (
-	"database/sql"
 	repo "github.com/ibeauregard/url-shortener/internal/repository"
-	"github.com/ibeauregard/url-shortener/internal/repository/sqlite"
 	"log"
 )
 
@@ -18,12 +16,8 @@ type concreteRepoProxy struct {
 	r repo.Repository
 }
 
-func NewRepoProxy(dataSourceName string) (RepoProxy, error) {
-	repository, err := sqlite.NewRepository(dataSourceName, sql.Open)
-	if err != nil {
-		return nil, err
-	}
-	return &concreteRepoProxy{r: repository}, nil
+func NewRepoProxy(r repo.Repository) RepoProxy {
+	return &concreteRepoProxy{r: r}
 }
 
 func (proxy *concreteRepoProxy) Close() error {

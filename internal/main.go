@@ -1,8 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/ibeauregard/url-shortener/internal/handling"
+	"github.com/ibeauregard/url-shortener/internal/repository/sqlite"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 )
@@ -13,9 +15,13 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
-	repo, _ := handling.NewRepoProxy("db/data/url-mappings.db")
-	defer repo.Close()
-	performRouting(r, repo)
+	repo, err := sqlite.NewRepository("db/data/url-mappings.db", sql.Open)
+	if err != nil {
+		log.Panic(err)
+	}
+	repoProxy := handling.NewRepoProxy(repo)
+	defer repoProxy.Close()
+	performRouting(r, repoProxy)
 	err = r.Run()
 	if err != nil {
 		log.Panic(err)
