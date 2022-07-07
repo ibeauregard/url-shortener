@@ -14,12 +14,13 @@ func TestHandleGetFromKey(t *testing.T) {
 
 type repoProxyMock struct {
 	RepoProxy
-	expectedUrl         string
-	expectedFoundStatus bool
+	outputStr         string
+	outputFoundStatus bool
+	outputError       error
 }
 
 func (m *repoProxyMock) getLongUrl(_ string) (string, bool) {
-	return m.expectedUrl, m.expectedFoundStatus
+	return m.outputStr, m.outputFoundStatus
 }
 
 func TestHandleFound(t *testing.T) {
@@ -31,8 +32,8 @@ func TestHandleFound(t *testing.T) {
 	}
 	ctx.AddParam("key", "my_key")
 	mock := &repoProxyMock{
-		expectedUrl:         dummyLongUrl,
-		expectedFoundStatus: true,
+		outputStr:         dummyLongUrl,
+		outputFoundStatus: true,
 	}
 	handle(ctx, mock)
 	assert.EqualValues(t, http.StatusMovedPermanently, w.Code)
@@ -41,8 +42,8 @@ func TestHandleFound(t *testing.T) {
 
 func TestHandleNotFound(t *testing.T) {
 	mock := &repoProxyMock{
-		expectedUrl:         "",
-		expectedFoundStatus: false,
+		outputStr:         "",
+		outputFoundStatus: false,
 	}
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/my_key_not_found", nil)

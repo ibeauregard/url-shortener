@@ -8,11 +8,98 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strings"
 	"testing"
 )
+
+func TestHandlePostToMappings(t *testing.T) {
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/test", strings.NewReader("{}"))
+	r := gin.Default()
+	r.POST("/test", HandlePostToMappings(&concreteRepoProxy{}))
+	r.ServeHTTP(w, req)
+	assert.EqualValues(t, http.StatusBadRequest, w.Code)
+}
+
+func TestHandlePostToMappingsBadUserInput(t *testing.T) {
+	badInputs := []map[string]any{
+		{},
+		{"foo": "bar"},
+		{"longUrl": ""},
+		{"longUrl": ";[*"},
+	}
+	for _, badInput := range badInputs {
+		w := httptest.NewRecorder()
+		ctx, _ := gin.CreateTestContext(w)
+		MockJsonPost(ctx, badInput)
+		t.Run(fmt.Sprintf("POST %v", badInput), func(t *testing.T) {
+			(&concretePostHandler{ctx}).handle(&concreteRepoProxy{})
+			assert.Condition(t, func() bool { return 400 <= w.Code && w.Code < 500 })
+		})
+	}
+}
+
+func TestHandlePostToMappingsBlacklistedDomain(t *testing.T) {
+	AppHost = "apphost"
+	w := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(w)
+	MockJsonPost(ctx, map[string]any{"longUrl": AppHost})
+	(&concretePostHandler{ctx}).handle(&concreteRepoProxy{})
+	assert.EqualValues(t, http.StatusUnprocessableEntity, w.Code)
+}
+
+func (m *repoProxyMock) getKey(_ string) (string, bool) {
+	return m.outputStr, m.outputFoundStatus
+}
+
+func TestHandlePostToMappingsLongUrlFound(t *testing.T) {
+	longUrl := "http://foobar.com"
+	key := "my_key"
+	AppHost = "apphost"
+	w := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(w)
+	MockJsonPost(ctx, map[string]any{"longUrl": longUrl})
+	(&concretePostHandler{ctx}).handle(&repoProxyMock{
+		outputStr:         key,
+		outputFoundStatus: true,
+	})
+	assert.EqualValues(t, http.StatusOK, w.Code)
+	validateResponseBody(t, w, longUrl, key)
+}
+
+func (m *repoProxyMock) addMapping(_ string) (string, error) {
+	return m.outputStr, m.outputError
+}
+
+func TestHandlePostToMappingsErrorWhileAdding(t *testing.T) {
+	w := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(w)
+	MockJsonPost(ctx, map[string]any{"longUrl": "http://foobar.com"})
+	(&concretePostHandler{ctx}).handle(&repoProxyMock{
+		outputFoundStatus: false,
+		outputError:       errors.New(""),
+	})
+	assert.EqualValues(t, http.StatusInternalServerError, w.Code)
+}
+
+func TestHandlePostToMappingsAddSuccess(t *testing.T) {
+	longUrl := "http://foobar.com"
+	key := "my_key"
+	w := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(w)
+	MockJsonPost(ctx, map[string]any{"longUrl": longUrl})
+	(&concretePostHandler{ctx}).handle(&repoProxyMock{
+		outputFoundStatus: false,
+		outputStr:         key,
+		outputError:       nil,
+	})
+	assert.EqualValues(t, http.StatusCreated, w.Code)
+	validateResponseBody(t, w, longUrl, key)
+}
 
 func TestGetNormalizedUrl(t *testing.T) {
 	getNormalizedUrlTests := []struct {
@@ -62,9 +149,6 @@ func TestGetNormalizedUrl(t *testing.T) {
 		t.Run(testName, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			ctx, _ := gin.CreateTestContext(w)
-			ctx.Request = &http.Request{
-				Header: make(http.Header),
-			}
 			MockJsonPost(ctx, test.requestBodyContent)
 			urlOutput, err := (&concretePostHandler{ctx}).getNormalizedUrl()
 			assert.EqualValues(t, test.expectedUrl, urlOutput)
@@ -94,6 +178,7 @@ func TestGetSuccessResponseBody(t *testing.T) {
 }
 
 func TestGetShortUrl(t *testing.T) {
+	AppHost = "apphost"
 	getShortUrlTests := []struct {
 		arg      string
 		expected string
@@ -110,12 +195,25 @@ func TestGetShortUrl(t *testing.T) {
 }
 
 func MockJsonPost(c *gin.Context, content any) {
-	c.Request.Method = "POST"
-	c.Request.Header.Set("Content-Type", "application/json")
-
 	jsonBytes, err := json.Marshal(content)
 	if err != nil {
 		panic(err)
 	}
-	c.Request.Body = io.NopCloser(bytes.NewBuffer(jsonBytes))
+	c.Request = &http.Request{
+		Method: "POST",
+		Header: http.Header{"Content-Type": []string{"application/json"}},
+		Body:   io.NopCloser(bytes.NewBuffer(jsonBytes)),
+	}
+}
+
+func validateResponseBody(t *testing.T, w *httptest.ResponseRecorder, longUrl string, key string) {
+	type responseBody struct {
+		LongUrl  string
+		ShortUrl string
+	}
+	expectedResponseBody := responseBody{longUrl, getShortUrl(key)}
+	rawResponseBody, _ := ioutil.ReadAll(w.Result().Body)
+	var parsedResponseBody responseBody
+	_ = json.Unmarshal(rawResponseBody, &parsedResponseBody)
+	assert.EqualValues(t, expectedResponseBody, parsedResponseBody)
 }
