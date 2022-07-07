@@ -6,6 +6,29 @@ import (
 	"testing"
 )
 
+func TestGenerateKey(t *testing.T) {
+	generateKeyTests := []struct {
+		arg1     string
+		arg2     uint
+		expected string
+	}{
+		{"http://fgr.ca", 42, "2Ms"},
+		{"http://foobar.com", 235, "Pw69"},
+		{"http://google.ca", 568, "=yC="},
+		{"http://twitter.com", 735298, "p=5=M="},
+		{"http://stackoverflow.com", 0, "Vf2"},
+		{"http://qwasar.io", 235, "mP69"},
+		{"http://linkedin.com", 9128, "Rd4xB"},
+		{"http://facebook.com", 19, "bwP"},
+	}
+	for _, test := range generateKeyTests {
+		testName := fmt.Sprintf("generateKey(%q, %v)", test.arg1, test.arg2)
+		t.Run(testName, func(t *testing.T) {
+			assert.EqualValues(t, test.expected, generateKey(test.arg1, test.arg2))
+		})
+	}
+}
+
 func TestChecksum(t *testing.T) {
 	checksumTests := []struct {
 		arg      string
