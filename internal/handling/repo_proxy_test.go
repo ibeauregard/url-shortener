@@ -16,7 +16,7 @@ type mockRepo struct {
 }
 
 func TestNewRepoProxy(t *testing.T) {
-	NewRepoProxy(&mockRepo{})
+	assert.NotNil(t, NewRepoProxy(&mockRepo{}))
 }
 
 func (m *mockRepo) Close() error {
