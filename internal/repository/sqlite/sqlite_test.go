@@ -25,7 +25,7 @@ func NewMock() (*sql.DB, sqlmock.Sqlmock) {
 }
 
 func TestNewRepositoryOpenError(t *testing.T) {
-	_, err := NewRepository("", func(dialect string, dsn string) (*sql.DB, error) {
+	_, err := NewRepository("", func(_ string, _ string) (*sql.DB, error) {
 		return nil, errors.New("")
 	})
 	assert.NotNil(t, err)
@@ -34,7 +34,7 @@ func TestNewRepositoryOpenError(t *testing.T) {
 func TestNewRepositoryPingError(t *testing.T) {
 	db, mock := NewMock()
 	mock.ExpectPing().WillReturnError(errors.New(""))
-	_, err := NewRepository("", func(dialect string, dsn string) (*sql.DB, error) {
+	_, err := NewRepository("", func(_ string, _ string) (*sql.DB, error) {
 		return db, nil
 	})
 	assert.NotNil(t, err)
@@ -43,17 +43,24 @@ func TestNewRepositoryPingError(t *testing.T) {
 func TestNewRepositorySuccess(t *testing.T) {
 	db, mock := NewMock()
 	mock.ExpectPing()
-	_, err := NewRepository("", func(dialect string, dsn string) (*sql.DB, error) {
+	_, err := NewRepository("", func(_ string, _ string) (*sql.DB, error) {
 		return db, nil
 	})
 	assert.Nil(t, err)
 }
 
-func TestClose(t *testing.T) {
-	db, _ := NewMock()
+func TestCloseError(t *testing.T) {
+	db, mock := NewMock()
+	mock.ExpectClose().WillReturnError(errors.New("error"))
 	repo := &repository{db}
-	repo.Close()
-	assert.Error(t, repo.db.Ping())
+	assert.Error(t, repo.Close())
+}
+
+func TestCloseSuccess(t *testing.T) {
+	db, mock := NewMock()
+	mock.ExpectClose()
+	repo := &repository{db}
+	assert.Nil(t, repo.Close())
 }
 
 func TestFindByLongUrl(t *testing.T) {
@@ -112,6 +119,15 @@ func TestCreateError(t *testing.T) {
 	prep.ExpectExec().WithArgs(m.Key, m.LongUrl).WillReturnResult(sqlmock.NewResult(1, 0))
 	err := (&repository{db}).Create(m)
 	assert.Error(t, err)
+}
+
+func TestCreateStmtCloseError(t *testing.T) {
+	db, mock := NewMock()
+	query := "INSERT INTO mappings \\(key, long_url\\) VALUES\\(\\?, \\?\\)"
+	prep := mock.ExpectPrepare(query).WillReturnCloseError(errors.New("error"))
+	prep.ExpectExec().WithArgs(m.Key, m.LongUrl).WillReturnResult(sqlmock.NewResult(1, 1))
+	err := (&repository{db}).Create(m)
+	assert.NoError(t, err)
 }
 
 func TestGetLastIdReturn0(t *testing.T) {

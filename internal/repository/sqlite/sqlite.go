@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type SqlDb interface {
+type sqlDb interface {
 	Close() error
 	Ping() error
 	QueryRowContext(context.Context, string, ...any) *sql.Row
@@ -17,7 +17,7 @@ type SqlDb interface {
 }
 
 type repository struct {
-	db SqlDb
+	db sqlDb
 }
 
 type sqlOpener func(string, string) (*sql.DB, error)
