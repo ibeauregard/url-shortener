@@ -17,7 +17,7 @@ type repoProxy struct {
 	r Repository
 }
 
-func NewRepoProxy(r Repository) RepoProxy {
+func NewRepoProxy(r Repository) *repoProxy {
 	return &repoProxy{r: r}
 }
 
