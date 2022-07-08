@@ -6,6 +6,7 @@ services:
     tty: true
     volumes:
       - db-test:/home/urlshortener/db/data
+      - ./tests/unit:/home/urlshortener/tests/unit
     environment:
       APP_HOST: "shortener-test:8080"
 
