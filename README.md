@@ -48,7 +48,7 @@ If both your POST request format and specified long URL are correct, you will re
 
 ### Use the short URL
 
-You can use the provided short URL in a web browser, as you would you any other URL. You will be redirected to the long URL that is associated with the short URL.
+You can use the provided short URL in a web browser, as you would use any other URL. You will be redirected to the long URL that is associated with the short URL.
 
 ## How to test
 
