@@ -1,8 +1,8 @@
 package handling
 
 import (
+	"fmt"
 	repo "github.com/ibeauregard/url-shortener/internal/repository"
-	"log"
 )
 
 type RepoProxy interface {
@@ -23,9 +23,9 @@ func NewRepoProxy(r repo.Repository) RepoProxy {
 func (proxy *concreteRepoProxy) Close() error {
 	err := proxy.r.Close()
 	if err != nil {
-		log.Printf("Unable to close repo %v", proxy.r)
+		return fmt.Errorf("handling.Close: %w", err)
 	}
-	return err
+	return nil
 }
 
 func (proxy *concreteRepoProxy) getKey(longUrl string) (key string, found bool) {
@@ -51,7 +51,7 @@ func (proxy *concreteRepoProxy) addMapping(longUrl string) (shortUrl string, err
 		LongUrl: longUrl,
 	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("handling.addMapping: %w", err)
 	}
 	return key, nil
 }

@@ -13,14 +13,18 @@ func main() {
 	var r = gin.Default()
 	err := r.SetTrustedProxies(nil)
 	if err != nil {
-		log.Print(err)
+		log.Printf("main: %v", err)
 	}
 	repo, err := sqlite.NewRepository("db/data/url-mappings.db", sql.Open)
 	if err != nil {
-		log.Panic(err)
+		log.Panicf("main: %v", err)
 	}
 	repoProxy := handling.NewRepoProxy(repo)
-	defer repoProxy.Close()
+	defer func() {
+		if err := repoProxy.Close(); err != nil {
+			log.Printf("main: %v", err)
+		}
+	}()
 	performRouting(r, repoProxy)
 	err = r.Run()
 	if err != nil {

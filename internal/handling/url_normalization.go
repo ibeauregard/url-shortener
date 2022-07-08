@@ -4,6 +4,7 @@
 package handling
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"regexp"
@@ -23,11 +24,11 @@ var (
 func normalize(s string) (*url.URL, error) {
 	s, err := performBasicNormalization(s)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("handling.normalize: %w", err)
 	}
 	u, err := url.ParseRequestURI(s)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("handling.normalize: %w", err)
 	}
 
 	p, ok := DefaultPorts[u.Scheme]
@@ -37,7 +38,7 @@ func normalize(s string) (*url.URL, error) {
 
 	got, err := idna.ToUnicode(u.Host)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("handling.normalize: %w", err)
 	} else {
 		u.Host = strings.ToLower(got)
 	}
@@ -59,7 +60,7 @@ func performBasicNormalization(s string) (string, error) {
 	s = strings.TrimSpace(s)
 	match := urlRegex.FindStringSubmatch(s)
 	if match == nil {
-		return "", fmt.Errorf("unable to match against URL regex")
+		return "", errors.New("handling.performBasicNormalization: unable to match against URL regex")
 	}
 	result := make(map[string]string)
 	for i, name := range urlRegex.SubexpNames() {
