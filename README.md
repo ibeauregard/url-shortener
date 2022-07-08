@@ -1,6 +1,7 @@
 # URL shortener (backend)
 ![Build and tests](https://github.com/ibeauregard/url-shortener/actions/workflows/build-and-test.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ibeauregard/url-shortener)](https://goreportcard.com/report/github.com/ibeauregard/url-shortener)
+[![codecov](https://codecov.io/gh/ibeauregard/url-shortener/branch/master/graph/badge.svg)](https://codecov.io/gh/ibeauregard/url-shortener)
 
 ## Overview
 
