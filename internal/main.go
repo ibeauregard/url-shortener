@@ -25,17 +25,9 @@ func main() {
 			log.Printf("main: %v", err)
 		}
 	}()
-	performRouting(r, repoProxy)
+	handling.PerformRouting(r, repoProxy)
 	err = r.Run()
 	if err != nil {
 		log.Panic(err)
 	}
-}
-
-func performRouting(r *gin.Engine, repo handling.RepoProxy) {
-	r.LoadHTMLFiles("templates/not_found.html")
-	r.Static("/static", "./static")
-	r.POST("/api/mappings", handling.HandlePostToMappings(repo))
-	r.GET("/:key", handling.HandleGetFromKey(repo))
-	r.GET("/", handling.ServeNotFoundResponse)
 }

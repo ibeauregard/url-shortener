@@ -5,22 +5,23 @@ import (
 	repo "github.com/ibeauregard/url-shortener/internal/repository"
 )
 
-type RepoProxy interface {
+type Repository interface {
 	Close() error
-	getKey(longUrl string) (key string, found bool)
-	getLongUrl(key string) (longUrl string, found bool)
-	addMapping(longUrl string) (shortUrl string, err error)
+	FindByLongUrl(longUrl string) (*repo.MappingModel, error)
+	FindByKey(key string) (*repo.MappingModel, error)
+	Create(mapping *repo.MappingModel) error
+	GetLastId() uint
 }
 
-type concreteRepoProxy struct {
-	r repo.Repository
+type repoProxy struct {
+	r Repository
 }
 
-func NewRepoProxy(r repo.Repository) RepoProxy {
-	return &concreteRepoProxy{r: r}
+func NewRepoProxy(r Repository) RepoProxy {
+	return &repoProxy{r: r}
 }
 
-func (proxy *concreteRepoProxy) Close() error {
+func (proxy *repoProxy) Close() error {
 	err := proxy.r.Close()
 	if err != nil {
 		return fmt.Errorf("handling.Close: %w", err)
@@ -28,7 +29,7 @@ func (proxy *concreteRepoProxy) Close() error {
 	return nil
 }
 
-func (proxy *concreteRepoProxy) getKey(longUrl string) (key string, found bool) {
+func (proxy *repoProxy) getKey(longUrl string) (key string, found bool) {
 	mapping, err := proxy.r.FindByLongUrl(longUrl)
 	if err != nil {
 		return "", false
@@ -36,7 +37,7 @@ func (proxy *concreteRepoProxy) getKey(longUrl string) (key string, found bool) 
 	return mapping.Key, true
 }
 
-func (proxy *concreteRepoProxy) getLongUrl(key string) (longUrl string, found bool) {
+func (proxy *repoProxy) getLongUrl(key string) (longUrl string, found bool) {
 	mapping, err := proxy.r.FindByKey(key)
 	if err != nil {
 		return "", false
@@ -44,7 +45,7 @@ func (proxy *concreteRepoProxy) getLongUrl(key string) (longUrl string, found bo
 	return mapping.LongUrl, true
 }
 
-func (proxy *concreteRepoProxy) addMapping(longUrl string) (shortUrl string, err error) {
+func (proxy *repoProxy) addMapping(longUrl string) (shortUrl string, err error) {
 	key := generateKey(longUrl, proxy.getNextDatabaseId())
 	err = proxy.r.Create(&repo.MappingModel{
 		Key:     key,
@@ -56,6 +57,6 @@ func (proxy *concreteRepoProxy) addMapping(longUrl string) (shortUrl string, err
 	return key, nil
 }
 
-func (proxy *concreteRepoProxy) getNextDatabaseId() uint {
+func (proxy *repoProxy) getNextDatabaseId() uint {
 	return proxy.r.GetLastId() + 1
 }

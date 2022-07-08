@@ -9,7 +9,7 @@ import (
 )
 
 type mockRepo struct {
-	repo.Repository
+	Repository
 	getLastIdOutput uint
 	outputMapping   *repo.MappingModel
 	outputError     error
@@ -24,13 +24,13 @@ func (m *mockRepo) Close() error {
 }
 
 func TestCloseError(t *testing.T) {
-	proxy := &concreteRepoProxy{&mockRepo{outputError: errors.New("error")}}
+	proxy := &repoProxy{&mockRepo{outputError: errors.New("error")}}
 	err := proxy.Close()
 	assert.NotNil(t, err)
 }
 
 func TestCloseSuccess(t *testing.T) {
-	proxy := &concreteRepoProxy{&mockRepo{outputError: nil}}
+	proxy := &repoProxy{&mockRepo{outputError: nil}}
 	err := proxy.Close()
 	assert.Nil(t, err)
 }
@@ -40,14 +40,14 @@ func (m *mockRepo) FindByLongUrl(_ string) (*repo.MappingModel, error) {
 }
 
 func TestGetKeyNotFound(t *testing.T) {
-	proxy := &concreteRepoProxy{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
+	proxy := &repoProxy{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
 	_, found := proxy.getKey("key_not_found")
 	assert.False(t, found)
 }
 
 func TestGetKeyFound(t *testing.T) {
 	modelKey := "my_key"
-	proxy := &concreteRepoProxy{&mockRepo{outputMapping: &repo.MappingModel{
+	proxy := &repoProxy{&mockRepo{outputMapping: &repo.MappingModel{
 		Key: modelKey,
 	}, outputError: nil}}
 	longUrl, found := proxy.getKey("http://foobar.com")
@@ -60,14 +60,14 @@ func (m *mockRepo) FindByKey(_ string) (*repo.MappingModel, error) {
 }
 
 func TestGetLongUrlNotFound(t *testing.T) {
-	proxy := &concreteRepoProxy{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
+	proxy := &repoProxy{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
 	_, found := proxy.getLongUrl("key_not_found")
 	assert.False(t, found)
 }
 
 func TestGetLongUrlFound(t *testing.T) {
 	modelLongUrl := "http://foobar.com"
-	proxy := &concreteRepoProxy{&mockRepo{outputMapping: &repo.MappingModel{
+	proxy := &repoProxy{&mockRepo{outputMapping: &repo.MappingModel{
 		LongUrl: modelLongUrl,
 	}, outputError: nil}}
 	longUrl, found := proxy.getLongUrl("key_found")
@@ -80,13 +80,13 @@ func (m *mockRepo) Create(_ *repo.MappingModel) error {
 }
 
 func TestAddMappingError(t *testing.T) {
-	proxy := &concreteRepoProxy{&mockRepo{outputError: errors.New("error")}}
+	proxy := &repoProxy{&mockRepo{outputError: errors.New("error")}}
 	_, err := proxy.addMapping("http://foobar.com")
 	assert.NotNil(t, err)
 }
 
 func TestAddMappingSuccess(t *testing.T) {
-	proxy := &concreteRepoProxy{&mockRepo{outputError: nil, getLastIdOutput: 42}}
+	proxy := &repoProxy{&mockRepo{outputError: nil, getLastIdOutput: 42}}
 	key, err := proxy.addMapping("http://foobar.com")
 	assert.EqualValues(t, "Pwt", key)
 	assert.Nil(t, err)
@@ -100,7 +100,7 @@ func TestGetNextDatabaseId(t *testing.T) {
 	lastIds := []uint{0, 1, 10}
 	for _, last := range lastIds {
 		t.Run(fmt.Sprintf("last=%v", last), func(t *testing.T) {
-			assert.EqualValues(t, last+1, (&concreteRepoProxy{&mockRepo{
+			assert.EqualValues(t, last+1, (&repoProxy{&mockRepo{
 				getLastIdOutput: last,
 			}}).getNextDatabaseId())
 		})

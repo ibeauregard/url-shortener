@@ -9,7 +9,7 @@ import (
 )
 
 func TestHandleGetFromKey(t *testing.T) {
-	assert.NotNil(t, HandleGetFromKey(&concreteRepoProxy{}))
+	assert.NotNil(t, HandleGetFromKey(&repoProxy{}))
 }
 
 type repoProxyMock struct {

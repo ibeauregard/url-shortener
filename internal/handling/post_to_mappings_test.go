@@ -20,7 +20,7 @@ func TestHandlePostToMappings(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/test", strings.NewReader("{}"))
 	r := gin.Default()
-	r.POST("/test", HandlePostToMappings(&concreteRepoProxy{}))
+	r.POST("/test", HandlePostToMappings(&repoProxy{}))
 	r.ServeHTTP(w, req)
 	assert.EqualValues(t, http.StatusBadRequest, w.Code)
 }
@@ -37,7 +37,7 @@ func TestHandlePostToMappingsBadUserInput(t *testing.T) {
 		ctx, _ := gin.CreateTestContext(w)
 		MockJsonPost(ctx, badInput)
 		t.Run(fmt.Sprintf("POST %v", badInput), func(t *testing.T) {
-			(&concretePostHandler{ctx}).handle(&concreteRepoProxy{})
+			(&concretePostHandler{ctx}).handle(&repoProxy{})
 			assert.Condition(t, func() bool { return 400 <= w.Code && w.Code < 500 })
 		})
 	}
@@ -48,7 +48,7 @@ func TestHandlePostToMappingsBlacklistedDomain(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": AppHost})
-	(&concretePostHandler{ctx}).handle(&concreteRepoProxy{})
+	(&concretePostHandler{ctx}).handle(&repoProxy{})
 	assert.EqualValues(t, http.StatusUnprocessableEntity, w.Code)
 }
 
