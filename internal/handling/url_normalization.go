@@ -26,7 +26,10 @@ func normalize(s string) (*url.URL, error) {
 	if err != nil {
 		return nil, fmt.Errorf("handling.normalize: %w", err)
 	}
-	u, _ := url.ParseRequestURI(s)
+	u, err := url.ParseRequestURI(s)
+	if err != nil {
+		return nil, fmt.Errorf("handling.normalize: %w", err)
+	}
 
 	p, ok := DefaultPorts[u.Scheme]
 	if ok {
