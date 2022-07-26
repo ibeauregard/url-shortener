@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-func HandleGetFromKey(repo RepoProxy) gin.HandlerFunc {
+func HandleGetFromKey(repo RepoAdapter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		handle(c, repo)
 	}
 }
 
-func handle(ctx *gin.Context, repo RepoProxy) {
+func handle(ctx *gin.Context, repo RepoAdapter) {
 	key := ctx.Param("key")
 	longUrl, found := repo.getLongUrl(key)
 	if found {

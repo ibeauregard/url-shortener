@@ -8,6 +8,6 @@ import (
 
 func TestPerformRouting(t *testing.T) {
 	r := gin.Default()
-	PerformRouting(r, &repoProxy{})
+	PerformRouting(r, &repoAdapter{})
 	assert.NotNil(t, r.Routes())
 }

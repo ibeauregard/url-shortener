@@ -19,13 +19,13 @@ func main() {
 	if err != nil {
 		log.Panicf("main: %v", err)
 	}
-	repoProxy := handling.NewRepoProxy(repo)
+	repoAdapter := handling.NewRepoAdapter(repo)
 	defer func() {
-		if err := repoProxy.Close(); err != nil {
+		if err := repoAdapter.Close(); err != nil {
 			log.Printf("main: %v", err)
 		}
 	}()
-	handling.PerformRouting(r, repoProxy)
+	handling.PerformRouting(r, repoAdapter)
 	err = r.Run()
 	if err != nil {
 		log.Panic(err)

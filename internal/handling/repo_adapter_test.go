@@ -15,8 +15,8 @@ type mockRepo struct {
 	outputError     error
 }
 
-func TestNewRepoProxy(t *testing.T) {
-	assert.NotNil(t, NewRepoProxy(&mockRepo{}))
+func TestNewRepoAdapter(t *testing.T) {
+	assert.NotNil(t, NewRepoAdapter(&mockRepo{}))
 }
 
 func (m *mockRepo) Close() error {
@@ -24,14 +24,14 @@ func (m *mockRepo) Close() error {
 }
 
 func TestCloseError(t *testing.T) {
-	proxy := &repoProxy{&mockRepo{outputError: errors.New("error")}}
-	err := proxy.Close()
+	adapter := &repoAdapter{&mockRepo{outputError: errors.New("error")}}
+	err := adapter.Close()
 	assert.NotNil(t, err)
 }
 
 func TestCloseSuccess(t *testing.T) {
-	proxy := &repoProxy{&mockRepo{outputError: nil}}
-	err := proxy.Close()
+	adapter := &repoAdapter{&mockRepo{outputError: nil}}
+	err := adapter.Close()
 	assert.Nil(t, err)
 }
 
@@ -40,17 +40,17 @@ func (m *mockRepo) FindByLongUrl(_ string) (*repo.MappingModel, error) {
 }
 
 func TestGetKeyNotFound(t *testing.T) {
-	proxy := &repoProxy{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
-	_, found := proxy.getKey("key_not_found")
+	adapter := &repoAdapter{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
+	_, found := adapter.getKey("key_not_found")
 	assert.False(t, found)
 }
 
 func TestGetKeyFound(t *testing.T) {
 	modelKey := "my_key"
-	proxy := &repoProxy{&mockRepo{outputMapping: &repo.MappingModel{
+	adapter := &repoAdapter{&mockRepo{outputMapping: &repo.MappingModel{
 		Key: modelKey,
 	}, outputError: nil}}
-	longUrl, found := proxy.getKey("http://foobar.com")
+	longUrl, found := adapter.getKey("http://foobar.com")
 	assert.EqualValues(t, modelKey, longUrl)
 	assert.True(t, found)
 }
@@ -60,17 +60,17 @@ func (m *mockRepo) FindByKey(_ string) (*repo.MappingModel, error) {
 }
 
 func TestGetLongUrlNotFound(t *testing.T) {
-	proxy := &repoProxy{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
-	_, found := proxy.getLongUrl("key_not_found")
+	adapter := &repoAdapter{&mockRepo{outputMapping: nil, outputError: errors.New("error")}}
+	_, found := adapter.getLongUrl("key_not_found")
 	assert.False(t, found)
 }
 
 func TestGetLongUrlFound(t *testing.T) {
 	modelLongUrl := "http://foobar.com"
-	proxy := &repoProxy{&mockRepo{outputMapping: &repo.MappingModel{
+	adapter := &repoAdapter{&mockRepo{outputMapping: &repo.MappingModel{
 		LongUrl: modelLongUrl,
 	}, outputError: nil}}
-	longUrl, found := proxy.getLongUrl("key_found")
+	longUrl, found := adapter.getLongUrl("key_found")
 	assert.EqualValues(t, modelLongUrl, longUrl)
 	assert.True(t, found)
 }
@@ -80,14 +80,14 @@ func (m *mockRepo) Create(_ *repo.MappingModel) error {
 }
 
 func TestAddMappingError(t *testing.T) {
-	proxy := &repoProxy{&mockRepo{outputError: errors.New("error")}}
-	_, err := proxy.addMapping("http://foobar.com")
+	adapter := &repoAdapter{&mockRepo{outputError: errors.New("error")}}
+	_, err := adapter.addMapping("http://foobar.com")
 	assert.NotNil(t, err)
 }
 
 func TestAddMappingSuccess(t *testing.T) {
-	proxy := &repoProxy{&mockRepo{outputError: nil, getLastIdOutput: 42}}
-	key, err := proxy.addMapping("http://foobar.com")
+	adapter := &repoAdapter{&mockRepo{outputError: nil, getLastIdOutput: 42}}
+	key, err := adapter.addMapping("http://foobar.com")
 	assert.EqualValues(t, "Pwt", key)
 	assert.Nil(t, err)
 }
@@ -100,7 +100,7 @@ func TestGetNextDatabaseId(t *testing.T) {
 	lastIds := []uint{0, 1, 10}
 	for _, last := range lastIds {
 		t.Run(fmt.Sprintf("last=%v", last), func(t *testing.T) {
-			assert.EqualValues(t, last+1, (&repoProxy{&mockRepo{
+			assert.EqualValues(t, last+1, (&repoAdapter{&mockRepo{
 				getLastIdOutput: last,
 			}}).getNextDatabaseId())
 		})

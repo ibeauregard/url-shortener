@@ -16,13 +16,13 @@ type concretePostHandler struct {
 	ctx *gin.Context
 }
 
-func HandlePostToMappings(repo RepoProxy) gin.HandlerFunc {
+func HandlePostToMappings(repo RepoAdapter) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		(&concretePostHandler{ctx}).handle(repo)
 	}
 }
 
-func (handler *concretePostHandler) handle(repo RepoProxy) {
+func (handler *concretePostHandler) handle(repo RepoAdapter) {
 	normalizedUrl, err := handler.getNormalizedUrl()
 	if err != nil {
 		return

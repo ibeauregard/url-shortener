@@ -20,7 +20,7 @@ func TestHandlePostToMappings(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/test", strings.NewReader("{}"))
 	r := gin.Default()
-	r.POST("/test", HandlePostToMappings(&repoProxy{}))
+	r.POST("/test", HandlePostToMappings(&repoAdapter{}))
 	r.ServeHTTP(w, req)
 	assert.EqualValues(t, http.StatusBadRequest, w.Code)
 }
@@ -37,7 +37,7 @@ func TestHandlePostToMappingsBadUserInput(t *testing.T) {
 		ctx, _ := gin.CreateTestContext(w)
 		MockJsonPost(ctx, badInput)
 		t.Run(fmt.Sprintf("POST %v", badInput), func(t *testing.T) {
-			(&concretePostHandler{ctx}).handle(&repoProxy{})
+			(&concretePostHandler{ctx}).handle(&repoAdapter{})
 			assert.Condition(t, func() bool { return 400 <= w.Code && w.Code < 500 })
 		})
 	}
@@ -48,11 +48,11 @@ func TestHandlePostToMappingsBlacklistedDomain(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": AppHost})
-	(&concretePostHandler{ctx}).handle(&repoProxy{})
+	(&concretePostHandler{ctx}).handle(&repoAdapter{})
 	assert.EqualValues(t, http.StatusUnprocessableEntity, w.Code)
 }
 
-func (m *repoProxyMock) getKey(_ string) (string, bool) {
+func (m *repoAdapterMock) getKey(_ string) (string, bool) {
 	return m.outputStr, m.outputFoundStatus
 }
 
@@ -63,7 +63,7 @@ func TestHandlePostToMappingsLongUrlFound(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": longUrl})
-	(&concretePostHandler{ctx}).handle(&repoProxyMock{
+	(&concretePostHandler{ctx}).handle(&repoAdapterMock{
 		outputStr:         key,
 		outputFoundStatus: true,
 	})
@@ -71,7 +71,7 @@ func TestHandlePostToMappingsLongUrlFound(t *testing.T) {
 	validateResponseBody(t, w, longUrl, key)
 }
 
-func (m *repoProxyMock) addMapping(_ string) (string, error) {
+func (m *repoAdapterMock) addMapping(_ string) (string, error) {
 	return m.outputStr, m.outputError
 }
 
@@ -79,7 +79,7 @@ func TestHandlePostToMappingsErrorWhileAdding(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": "http://foobar.com"})
-	(&concretePostHandler{ctx}).handle(&repoProxyMock{
+	(&concretePostHandler{ctx}).handle(&repoAdapterMock{
 		outputFoundStatus: false,
 		outputError:       errors.New(""),
 	})
@@ -92,7 +92,7 @@ func TestHandlePostToMappingsAddSuccess(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": longUrl})
-	(&concretePostHandler{ctx}).handle(&repoProxyMock{
+	(&concretePostHandler{ctx}).handle(&repoAdapterMock{
 		outputFoundStatus: false,
 		outputStr:         key,
 		outputError:       nil,

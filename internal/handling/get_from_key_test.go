@@ -9,17 +9,17 @@ import (
 )
 
 func TestHandleGetFromKey(t *testing.T) {
-	assert.NotNil(t, HandleGetFromKey(&repoProxy{}))
+	assert.NotNil(t, HandleGetFromKey(&repoAdapter{}))
 }
 
-type repoProxyMock struct {
-	RepoProxy
+type repoAdapterMock struct {
+	RepoAdapter
 	outputStr         string
 	outputFoundStatus bool
 	outputError       error
 }
 
-func (m *repoProxyMock) getLongUrl(_ string) (string, bool) {
+func (m *repoAdapterMock) getLongUrl(_ string) (string, bool) {
 	return m.outputStr, m.outputFoundStatus
 }
 
@@ -31,7 +31,7 @@ func TestHandleFound(t *testing.T) {
 		Method: "GET",
 	}
 	ctx.AddParam("key", "my_key")
-	mock := &repoProxyMock{
+	mock := &repoAdapterMock{
 		outputStr:         dummyLongUrl,
 		outputFoundStatus: true,
 	}
@@ -41,7 +41,7 @@ func TestHandleFound(t *testing.T) {
 }
 
 func TestHandleNotFound(t *testing.T) {
-	mock := &repoProxyMock{
+	mock := &repoAdapterMock{
 		outputStr:         "",
 		outputFoundStatus: false,
 	}
