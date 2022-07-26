@@ -15,6 +15,8 @@ Make sure you have [Docker Compose installed](https://docs.docker.com/compose/in
 
 ## How to run
 
+Make sure your Docker daemon is running.
+
 After you cloned the repo, you can simply execute `make build run` from the project's root directory. When you build the project for the first time, expect a relatively long build, since a lot of dependencies will need to be downloaded. Subsequent builds will be much faster.
 
 See the Makefile for a list of `make` targets that you can use if needed.
