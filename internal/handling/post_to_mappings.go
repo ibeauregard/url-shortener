@@ -12,17 +12,17 @@ var AppHost = os.Getenv("APP_HOST")
 
 const AppScheme = "http"
 
-type concretePostHandler struct {
+type postHandler struct {
 	ctx *gin.Context
 }
 
 func HandlePostToMappings(repo RepoAdapter) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		(&concretePostHandler{ctx}).handle(repo)
+		(&postHandler{ctx}).handle(repo)
 	}
 }
 
-func (handler *concretePostHandler) handle(repo RepoAdapter) {
+func (handler *postHandler) handle(repo RepoAdapter) {
 	normalizedUrl, err := handler.getNormalizedUrl()
 	if err != nil {
 		return
@@ -49,7 +49,7 @@ func (handler *concretePostHandler) handle(repo RepoAdapter) {
 	handler.ctx.JSON(http.StatusCreated, getSuccessResponseBody(normalizedUrlAsString, getShortUrl(key)))
 }
 
-func (handler *concretePostHandler) getNormalizedUrl() (*url.URL, error) {
+func (handler *postHandler) getNormalizedUrl() (*url.URL, error) {
 	var payload struct {
 		LongUrl string `json:"longUrl" binding:"required"`
 	}

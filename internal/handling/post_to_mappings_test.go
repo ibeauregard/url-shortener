@@ -37,7 +37,7 @@ func TestHandlePostToMappingsBadUserInput(t *testing.T) {
 		ctx, _ := gin.CreateTestContext(w)
 		MockJsonPost(ctx, badInput)
 		t.Run(fmt.Sprintf("POST %v", badInput), func(t *testing.T) {
-			(&concretePostHandler{ctx}).handle(&repoAdapter{})
+			(&postHandler{ctx}).handle(&repoAdapter{})
 			assert.Condition(t, func() bool { return 400 <= w.Code && w.Code < 500 })
 		})
 	}
@@ -48,7 +48,7 @@ func TestHandlePostToMappingsBlacklistedDomain(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": AppHost})
-	(&concretePostHandler{ctx}).handle(&repoAdapter{})
+	(&postHandler{ctx}).handle(&repoAdapter{})
 	assert.EqualValues(t, http.StatusUnprocessableEntity, w.Code)
 }
 
@@ -63,7 +63,7 @@ func TestHandlePostToMappingsLongUrlFound(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": longUrl})
-	(&concretePostHandler{ctx}).handle(&repoAdapterMock{
+	(&postHandler{ctx}).handle(&repoAdapterMock{
 		outputStr:         key,
 		outputFoundStatus: true,
 	})
@@ -79,7 +79,7 @@ func TestHandlePostToMappingsErrorWhileAdding(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": "http://foobar.com"})
-	(&concretePostHandler{ctx}).handle(&repoAdapterMock{
+	(&postHandler{ctx}).handle(&repoAdapterMock{
 		outputFoundStatus: false,
 		outputError:       errors.New(""),
 	})
@@ -92,7 +92,7 @@ func TestHandlePostToMappingsAddSuccess(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 	MockJsonPost(ctx, map[string]any{"longUrl": longUrl})
-	(&concretePostHandler{ctx}).handle(&repoAdapterMock{
+	(&postHandler{ctx}).handle(&repoAdapterMock{
 		outputFoundStatus: false,
 		outputStr:         key,
 		outputError:       nil,
@@ -150,7 +150,7 @@ func TestGetNormalizedUrl(t *testing.T) {
 			w := httptest.NewRecorder()
 			ctx, _ := gin.CreateTestContext(w)
 			MockJsonPost(ctx, test.requestBodyContent)
-			urlOutput, err := (&concretePostHandler{ctx}).getNormalizedUrl()
+			urlOutput, err := (&postHandler{ctx}).getNormalizedUrl()
 			assert.EqualValues(t, test.expectedUrl, urlOutput)
 			assert.Condition(t, func() bool {
 				return (err == nil) == (test.expectedError == nil)
